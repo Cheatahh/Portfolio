@@ -5,6 +5,7 @@ interface Bolt {
     group: THREE.Group;
     direction: THREE.Vector3;
     velocity: THREE.Vector3;
+    target: THREE.Object3D | null;
     age: number;
 }
 
@@ -21,6 +22,9 @@ const SPARK_LIFE = 0.25;
 const COLOR = 0xff8ad8;
 const MUZZLES = [new THREE.Vector3(-3.28, -0.1, -1.3), new THREE.Vector3(3.28, -0.1, -1.3)];
 const AXIS = new THREE.Vector3(0, 0, -1);
+const AIM_RANGE = 40;
+const AIM_CONE = Math.cos(THREE.MathUtils.degToRad(28));
+const AIM_TURN_RATE = 50;
 
 export class LaserBattery {
     private readonly group = new THREE.Group();
@@ -73,6 +77,7 @@ export class LaserBattery {
         for (let i = this.bolts.length - 1; i >= 0; i--) {
             const bolt = this.bolts[i];
             bolt.age += dt;
+            this.home(bolt, dt);
             this.from.copy(bolt.group.position);
             this.to.copy(this.from).addScaledVector(bolt.velocity, dt);
 
@@ -133,10 +138,27 @@ export class LaserBattery {
             group,
             direction,
             velocity: direction.clone().multiplyScalar(SPEED + forward),
+            target: null,
             age: 0,
         });
         this.muzzleFlashes[index].material.opacity = 1;
         this.onFire(Math.sign(MUZZLES[index].x));
+    }
+
+    private home(bolt: Bolt, dt: number) {
+        if (bolt.target && !bolt.target.parent) bolt.target = null;
+        bolt.target ??= this.asteroids.seek(bolt.group.position, bolt.direction, AIM_RANGE, AIM_CONE);
+        if (!bolt.target) return;
+        const desired = this.from.subVectors(bolt.target.position, bolt.group.position);
+        if (desired.dot(bolt.direction) <= 0) {
+            bolt.target = null;
+            return;
+        }
+        desired.normalize();
+        const speed = bolt.velocity.length();
+        bolt.direction.lerp(desired, Math.min(1, AIM_TURN_RATE * dt)).normalize();
+        bolt.velocity.copy(bolt.direction).multiplyScalar(speed);
+        bolt.group.quaternion.setFromUnitVectors(AXIS, bolt.direction);
     }
 
     private hitObstacle(): THREE.Vector3 | null {

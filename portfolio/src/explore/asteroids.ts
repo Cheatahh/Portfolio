@@ -155,6 +155,25 @@ export class AsteroidField {
         return impact;
     }
 
+    seek(position: THREE.Vector3, direction: THREE.Vector3, range: number, cone: number): THREE.Object3D | null {
+        let best: THREE.Object3D | null = null;
+        let bestOffset = Infinity;
+        for (const asteroid of this.asteroids) {
+            if (asteroid.age < GROW_TIME) continue;
+            const offset = this.normal.subVectors(asteroid.mesh.position, position);
+            const distance = offset.length();
+            if (distance > range || distance < 1e-3) continue;
+            const along = offset.dot(direction);
+            if (along / distance < cone) continue;
+            const sideways = Math.sqrt(Math.max(0, distance * distance - along * along));
+            if (sideways < bestOffset) {
+                bestOffset = sideways;
+                best = asteroid.mesh;
+            }
+        }
+        return best;
+    }
+
     strike(from: THREE.Vector3, to: THREE.Vector3, direction: THREE.Vector3): THREE.Vector3 | null {
         let index = -1;
         let nearest = Infinity;
