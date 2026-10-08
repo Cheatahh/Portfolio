@@ -4,8 +4,9 @@ const FORWARD = ['KeyW'];
 const BACKWARD = ['KeyS'];
 const LEFT = ['KeyA'];
 const RIGHT = ['KeyD'];
-const UP = ['KeyE', 'Space'];
+const UP = ['KeyE'];
 const DOWN = ['KeyQ', 'KeyC', 'ControlLeft', 'ControlRight'];
+const FIRE = ['Space'];
 
 const NOSE_DOWN = ['Numpad8', 'ArrowUp'];
 const NOSE_UP = ['Numpad5', 'ArrowDown'];
@@ -13,7 +14,7 @@ const BANK_LEFT = ['Numpad4', 'ArrowLeft'];
 const BANK_RIGHT = ['Numpad6', 'ArrowRight'];
 
 export const FLIGHT_KEYS: ReadonlySet<string> = new Set([
-    ...FORWARD, ...BACKWARD, ...LEFT, ...RIGHT, ...UP, ...DOWN, ...NOSE_DOWN, ...NOSE_UP, ...BANK_LEFT, ...BANK_RIGHT,
+    ...FORWARD, ...BACKWARD, ...LEFT, ...RIGHT, ...UP, ...DOWN, ...NOSE_DOWN, ...NOSE_UP, ...BANK_LEFT, ...BANK_RIGHT, ...FIRE,
 ]);
 
 const isCtrl = (code: string) => code === 'ControlLeft' || code === 'ControlRight';
@@ -22,6 +23,7 @@ export class Input {
     private readonly keys = new Set<string>();
     readonly stick = {x: 0, y: 0};
     lift = 0;
+    trigger = false;
 
     constructor() {
         window.addEventListener('keydown', this.onKeyDown);
@@ -47,6 +49,10 @@ export class Input {
 
     get roll(): number {
         return this.axis(BANK_RIGHT) - this.axis(BANK_LEFT);
+    }
+
+    get firing(): boolean {
+        return this.trigger || this.axis(FIRE) === 1;
     }
 
     get boost(): boolean {

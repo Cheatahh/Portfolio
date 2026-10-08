@@ -19,9 +19,10 @@ const KEYS: [string, string][] = [
     ['A / D', 'Steer'],
     ['↑ / ↓', 'Tilt nose down / up'],
     ['← / →', 'Bank left / right'],
-    ['E / Space', 'Climb'],
+    ['E', 'Climb'],
     ['Q / Ctrl', 'Descend'],
     ['Shift', 'Boost'],
+    ['Space', 'Fire lasers'],
     ['M', 'Star chart'],
     ['N', 'Next stop'],
 ];
@@ -225,6 +226,7 @@ export default function Explore({onExit}: Props) {
                             <ul className="gx-keys">
                                 <li><kbd>Left pad</kbd> Steer & thrust</li>
                                 <li><kbd>▲ ▼</kbd> Climb & descend</li>
+                                <li><kbd>✦</kbd> Fire lasers</li>
                                 <li><kbd>Tap</kbd> a star to fly there</li>
                             </ul>
                         ) : (

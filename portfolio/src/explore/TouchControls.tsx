@@ -45,6 +45,10 @@ export function TouchControls({input}: { input: Input }) {
         },
     });
 
+    const trigger = (value: boolean) => () => {
+        input.trigger = value;
+    };
+
     return (
         <div className="gx-touch">
             <div ref={padRef}
@@ -62,9 +66,17 @@ export function TouchControls({input}: { input: Input }) {
                       style={{transform: `translate(${knob.x * 34}px, ${knob.y * 34}px)`}}/>
             </div>
 
-            <div className="gx-lift">
-                <button aria-label="Climb" {...lift(1)}>▲</button>
-                <button aria-label="Descend" {...lift(-1)}>▼</button>
+            <div className="gx-controls-right">
+                <button className="gx-fire"
+                        aria-label="Fire lasers"
+                        onPointerDown={trigger(true)}
+                        onPointerUp={trigger(false)}
+                        onPointerLeave={trigger(false)}
+                        onPointerCancel={trigger(false)}>✦</button>
+                <div className="gx-lift">
+                    <button aria-label="Climb" {...lift(1)}>▲</button>
+                    <button aria-label="Descend" {...lift(-1)}>▼</button>
+                </div>
             </div>
         </div>
     );

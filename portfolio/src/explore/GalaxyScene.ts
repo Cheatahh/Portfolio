@@ -4,6 +4,8 @@ import type {Galaxy, Star} from 'portfolioContent';
 import {glowTexture, rayTexture} from './textures.ts';
 import {type Body, createPlanet, createSun} from './bodies.ts';
 import {createShip, type Ship} from './ship.ts';
+import {AsteroidField} from './asteroids.ts';
+import {LaserBattery} from './lasers.ts';
 import type {Input} from './input.ts';
 
 export interface HudState {
@@ -74,8 +76,12 @@ export class GalaxyScene {
     private readonly marker: THREE.Mesh;
     private readonly ship: Ship;
     private readonly trails: { line: THREE.Line; points: THREE.Vector3[] }[];
+    private readonly asteroids: AsteroidField;
+    private readonly lasers: LaserBattery;
 
     private readonly position = new THREE.Vector3(0, 4, 36);
+    private readonly previous = new THREE.Vector3();
+    private readonly velocity = new THREE.Vector3();
     private yaw = 0;
     private speed = 0;
     private verticalSpeed = 0;
@@ -140,6 +146,16 @@ export class GalaxyScene {
         this.trails = this.ship.exhausts.map(() => this.createTrail());
         this.trails.forEach(t => this.scene.add(t.line));
 
+        const obstacles = this.nodes.map(node => ({position: node.position, radius: node.star.radius * 1.15}));
+        this.asteroids = new AsteroidField(
+            this.scene,
+            obstacles,
+            WORLD_RADIUS,
+            this.glow,
+            this.position,
+        );
+        this.lasers = new LaserBattery(this.scene, this.ship.hull, this.asteroids, obstacles, this.glow);
+
         const canvas = this.renderer.domElement;
         canvas.addEventListener('pointerdown', this.onPointerDown);
         canvas.addEventListener('pointerup', this.onPointerUp);
@@ -181,6 +197,8 @@ export class GalaxyScene {
         canvas.removeEventListener('pointerup', this.onPointerUp);
         this.options.minimap?.removeEventListener('click', this.onMinimapClick);
 
+        this.lasers.dispose();
+        this.asteroids.dispose();
         this.scene.traverse(object => {
             if (object instanceof THREE.Sprite) {
                 object.material.dispose();
@@ -327,8 +345,12 @@ export class GalaxyScene {
         const dt = Math.min(this.clock.getDelta(), 0.05);
         const time = this.clock.elapsedTime;
 
+        this.previous.copy(this.position);
         this.fly(dt);
+        this.velocity.subVectors(this.position, this.previous).divideScalar(Math.max(dt, 1e-3));
+        this.collide(this.asteroids.update(dt, this.position, this.velocity));
         this.updateShip(dt, time);
+        this.lasers.update(dt, this.options.input.firing, this.velocity);
         this.updateCamera(dt);
         this.updateStars(time);
         this.updateOrbit();
@@ -437,6 +459,12 @@ export class GalaxyScene {
             this.yawImpulse = (side >= 0 ? 1 : -1) * 2.8;
             this.shake = Math.min(1, 0.3 - into / 40);
         }
+    }
+
+    private collide(impact: number) {
+        if (impact <= 0) return;
+        this.shake = Math.max(this.shake, Math.min(0.6, 0.18 + impact / 120));
+        if (!this.autopilot) this.speed *= 0.92;
     }
 
     private avoidObstacles(destination: THREE.Vector3, target: StarNode): THREE.Vector3 {
