@@ -44,6 +44,7 @@ export class LaserBattery {
         private readonly asteroids: AsteroidField,
         private readonly obstacles: readonly Obstacle[],
         private readonly glow: THREE.Texture,
+        private readonly onFire: (side: number) => void,
     ) {
         scene.add(this.group);
         this.muzzleFlashes = MUZZLES.map(muzzle => {
@@ -135,6 +136,7 @@ export class LaserBattery {
             age: 0,
         });
         this.muzzleFlashes[index].material.opacity = 1;
+        this.onFire(Math.sign(MUZZLES[index].x));
     }
 
     private hitObstacle(): THREE.Vector3 | null {

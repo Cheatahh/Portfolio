@@ -2,9 +2,10 @@ import './Explore.css';
 
 import {type CSSProperties, useCallback, useEffect, useRef, useState} from 'react';
 import {useMediaQuery} from '../hooks/useMediaQuery.ts';
-import {ArrowLeft, ArrowRight, Close} from '../components/Icons.tsx';
+import {ArrowLeft, ArrowRight, Close, SoundOff, SoundOn} from '../components/Icons.tsx';
 import {GalaxyScene, type HudState} from './GalaxyScene.ts';
 import {FLIGHT_KEYS, Input} from './input.ts';
+import {SoundBoard} from './sound.ts';
 import {colorOf, constellationById, loadDiscovered, map, nextStop, saveDiscovered, starById} from './galaxyData.ts';
 import {StarPanel} from './StarPanel.tsx';
 import {StarChart} from './StarChart.tsx';
@@ -25,6 +26,7 @@ const KEYS: [string, string][] = [
     ['Space', 'Fire lasers'],
     ['M', 'Star chart'],
     ['N', 'Next stop'],
+    ['V', 'Sound on / off'],
 ];
 
 interface Props {
@@ -35,6 +37,7 @@ export default function Explore({onExit}: Props) {
     const stageRef = useRef<HTMLDivElement>(null);
     const minimapRef = useRef<HTMLCanvasElement>(null);
     const sceneRef = useRef<GalaxyScene | null>(null);
+    const soundRef = useRef<SoundBoard | null>(null);
 
     const [input, setInput] = useState<Input | null>(null);
     const [touch] = useState(() => window.matchMedia('(pointer: coarse)').matches);
@@ -48,6 +51,7 @@ export default function Explore({onExit}: Props) {
     const [celebrate, setCelebrate] = useState(false);
     const compact = useMediaQuery(COMPACT_QUERY);
     const [reading, setReading] = useState<string | null>(null);
+    const [muted, setMuted] = useState(false);
 
     const panelOpen = !!orbit && (compact ? reading === orbit : orbit !== dismissed);
     const panelStar = panelOpen ? starById.get(orbit!) : undefined;
@@ -71,6 +75,7 @@ export default function Explore({onExit}: Props) {
 
     useEffect(() => {
         const flightInput = new Input();
+        const sound = new SoundBoard();
         let scene: GalaxyScene | null = null;
         try {
             scene = new GalaxyScene({
@@ -78,21 +83,29 @@ export default function Explore({onExit}: Props) {
                 minimap: minimapRef.current,
                 galaxy: map,
                 input: flightInput,
+                sound,
                 callbacks: {onHud: setHud, onOrbit: setOrbit, onPick: flyTo},
             });
         } catch (error) {
             console.error(error);
             flightInput.dispose();
+            sound.dispose();
             setFailed(true);
             return;
         }
         const created = scene;
         sceneRef.current = created;
+        soundRef.current = sound;
+        setMuted(sound.muted);
+        const unsubscribe = sound.subscribe(setMuted);
         setInput(flightInput);
         return () => {
+            unsubscribe();
             created.dispose();
             flightInput.dispose();
+            sound.dispose();
             sceneRef.current = null;
+            soundRef.current = null;
         };
     }, [flyTo]);
 
@@ -133,6 +146,9 @@ export default function Explore({onExit}: Props) {
                 case 'KeyN':
                     goNext();
                     break;
+                case 'KeyV':
+                    soundRef.current?.toggle();
+                    break;
                 case 'Escape':
                     if (state.chartOpen) setChartOpen(false);
                     else if (state.intro) setIntro(false);
@@ -169,6 +185,12 @@ export default function Explore({onExit}: Props) {
                 </button>
                 <button className="gx-btn" onClick={goNext}>
                     Next stop {!touch && <kbd>N</kbd>}
+                </button>
+                <button className="gx-btn gx-btn-square"
+                        onClick={() => soundRef.current?.toggle()}
+                        aria-label={muted ? 'Turn sound on' : 'Turn sound off'}
+                        aria-pressed={!muted}>
+                    {muted ? <SoundOff/> : <SoundOn/>}
                 </button>
                 <button className="gx-btn gx-btn-square" onClick={() => setIntro(true)} aria-label="How to fly">?</button>
             </header>

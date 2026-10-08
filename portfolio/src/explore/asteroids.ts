@@ -128,6 +128,7 @@ export class AsteroidField {
         private readonly bounds: number,
         private readonly glow: THREE.Texture,
         start: THREE.Vector3,
+        private readonly onShatter: (position: THREE.Vector3, radius: number) => void,
     ) {
         scene.add(this.group);
         for (let i = 0; i < COUNT; i++) this.spawn(start, true);
@@ -184,6 +185,7 @@ export class AsteroidField {
     private destroy(index: number, push: THREE.Vector3) {
         const asteroid = this.asteroids[index];
         this.shatter(asteroid, push);
+        this.onShatter(asteroid.mesh.position, asteroid.radius);
         this.group.remove(asteroid.mesh);
         this.asteroids.splice(index, 1);
         this.spawn(this.ship, false);

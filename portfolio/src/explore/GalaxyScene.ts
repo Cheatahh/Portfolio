@@ -7,6 +7,7 @@ import {createShip, type Ship} from './ship.ts';
 import {AsteroidField} from './asteroids.ts';
 import {LaserBattery} from './lasers.ts';
 import type {Input} from './input.ts';
+import type {SoundBoard} from './sound.ts';
 
 export interface HudState {
     speed: number;
@@ -26,6 +27,7 @@ interface Options {
     minimap: HTMLCanvasElement | null;
     galaxy: Galaxy;
     input: Input;
+    sound: SoundBoard;
     callbacks: SceneCallbacks;
 }
 
@@ -153,8 +155,12 @@ export class GalaxyScene {
             WORLD_RADIUS,
             this.glow,
             this.position,
+            (position, radius) => this.options.sound.explosion(radius, this.loudness(position), this.panOf(position)),
         );
-        this.lasers = new LaserBattery(this.scene, this.ship.hull, this.asteroids, obstacles, this.glow);
+        this.lasers = new LaserBattery(
+            this.scene, this.ship.hull, this.asteroids, obstacles, this.glow,
+            side => this.options.sound.laser(side * 0.35),
+        );
 
         const canvas = this.renderer.domElement;
         canvas.addEventListener('pointerdown', this.onPointerDown);
@@ -175,6 +181,7 @@ export class GalaxyScene {
         this.autopilot = node;
         this.knockback.set(0, 0, 0);
         this.yawImpulse = 0;
+        this.options.sound.blip();
         this.emitHud();
     }
 
@@ -458,6 +465,7 @@ export class GalaxyScene {
             const side = forward.z * normal.x - forward.x * normal.z;
             this.yawImpulse = (side >= 0 ? 1 : -1) * 2.8;
             this.shake = Math.min(1, 0.3 - into / 40);
+            this.options.sound.bump(-into / 40);
         }
     }
 
@@ -465,6 +473,15 @@ export class GalaxyScene {
         if (impact <= 0) return;
         this.shake = Math.max(this.shake, Math.min(0.6, 0.18 + impact / 120));
         if (!this.autopilot) this.speed *= 0.92;
+    }
+
+    private loudness(position: THREE.Vector3) {
+        return 1 / (1 + position.distanceTo(this.position) / 30);
+    }
+
+    private panOf(position: THREE.Vector3) {
+        const local = position.clone().applyMatrix4(this.camera.matrixWorldInverse);
+        return THREE.MathUtils.clamp(local.x / Math.max(local.length(), 1), -0.8, 0.8);
     }
 
     private avoidObstacles(destination: THREE.Vector3, target: StarNode): THREE.Vector3 {
@@ -603,6 +620,7 @@ export class GalaxyScene {
             closest?.label.classList.add('orbit');
             this.orbit = id;
             this.options.callbacks.onOrbit(id);
+            if (id) this.options.sound.chime();
         }
     }
 
