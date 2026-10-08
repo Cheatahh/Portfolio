@@ -1,0 +1,14 @@
+{
+  "name": "portfolio-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "portfolio",
+    "portfolioContent/build/dist/js/productionLibrary"
+  ],
+  "scripts": {
+    "build:shared": "gradlew :portfolioContent:jsBrowserProductionLibraryDistribution",
+    "build": "npm run build:shared && npm run build -w portfolio",
+    "start": "npm run build:shared && npm run start -w portfolio"
+  }
+}

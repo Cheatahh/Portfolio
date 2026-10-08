@@ -1,0 +1,137 @@
+.project-kind {
+    display: inline-block;
+    font-family: var(--font-mono), monospace;
+    font-size: 12px;
+    color: var(--primary-2);
+    margin-bottom: 10px;
+}
+
+.project-desc {
+    margin: 12px 0 18px;
+    color: var(--text-muted);
+}
+
+.project-featured {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    overflow: hidden;
+}
+
+.project-featured-body {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+.project-featured h3 {
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 600;
+}
+
+.project-featured .tags {
+    margin-top: 24px;
+}
+
+.project-featured-art {
+    display: grid;
+    place-items: center;
+    padding: 32px;
+    border-left: 1px solid var(--border);
+    background: radial-gradient(circle at 50% 45%, rgba(169, 180, 255, 0.12), transparent 65%),
+    var(--bg-elevated);
+}
+
+.graph-art {
+    width: 100%;
+    max-width: 340px;
+    overflow: visible;
+}
+
+.graph-edge {
+    stroke: rgba(169, 180, 255, 0.28);
+    stroke-width: 1.4;
+    stroke-dasharray: 4 5;
+    animation: flow 3s linear infinite;
+    /*noinspection CssUnresolvedCustomProperty*/
+    animation-delay: var(--delay, 0ms);
+}
+
+@keyframes flow {
+    to { stroke-dashoffset: -18; }
+}
+
+.graph-node {
+    fill: var(--surface);
+    stroke: var(--primary);
+    stroke-width: 1.6;
+}
+
+.graph-core {
+    fill: url(#graph-grad);
+    filter: drop-shadow(0 0 14px rgba(169, 160, 255, 0.6));
+}
+
+.graph-core-label {
+    font-family: var(--font-display), serif;
+    font-weight: 700;
+    font-size: 11px;
+    fill: #14142a;
+}
+
+.graph-label {
+    font-family: var(--font-mono), monospace;
+    font-size: 10px;
+    fill: var(--text-faint);
+}
+
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.project {
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+}
+
+.project:hover {
+    transform: translateY(-4px);
+}
+
+.project h3 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.project .bullets li {
+    font-size: 14.5px;
+}
+
+.project .tags {
+    margin-top: auto;
+    padding-top: 22px;
+}
+
+@media (max-width: 900px) {
+    .project-featured {
+        grid-template-columns: 1fr;
+    }
+    .project-featured-art {
+        border-left: 0;
+        border-top: 1px solid var(--border);
+        order: -1;
+    }
+    .project-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 520px) {
+    .project-featured-body,
+    .project {
+        padding: 24px 20px;
+    }
+}

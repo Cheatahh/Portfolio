@@ -1,0 +1,127 @@
+.about-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 56px;
+    align-items: start;
+}
+
+.about-text {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-size: 18px;
+    color: var(--text-muted);
+}
+
+.about-text p:first-child {
+    color: var(--text);
+}
+
+.about-facts {
+    padding: 28px;
+    position: sticky;
+    top: calc(var(--nav-height) + 24px);
+}
+
+.about-facts-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--border);
+}
+
+.about-facts-head strong {
+    display: block;
+    font-family: var(--font-display), serif;
+    font-size: 18px;
+}
+
+.about-facts-head span {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.about-facts-head .about-avatar {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: var(--gradient);
+    color: #14142a;
+    font-family: var(--font-display), serif;
+    font-weight: 700;
+    font-size: 19px;
+}
+
+.about-facts dl {
+    margin: 0;
+    padding: 8px 0;
+}
+
+.about-facts dl > div {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--border);
+    font-size: 14px;
+}
+
+.about-facts dt {
+    font-family: var(--font-mono), monospace;
+    font-size: 12px;
+    color: var(--text-faint);
+    padding-top: 2px;
+}
+
+.about-facts dd {
+    margin: 0;
+    color: var(--text);
+}
+
+.about-thesis {
+    display: block;
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: var(--primary-soft);
+    border: 1px solid rgba(169, 180, 255, 0.2);
+    font-size: 14px;
+    line-height: 1.5;
+    transition: border-color 0.2s;
+}
+
+.about-thesis:hover {
+    border-color: var(--primary);
+}
+
+.about-thesis span {
+    display: block;
+    font-family: var(--font-mono), monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--primary);
+    margin-bottom: 4px;
+}
+
+@media (max-width: 900px) {
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+    .about-facts {
+        position: static;
+    }
+}
+
+@media (max-width: 520px) {
+    .about-text {
+        font-size: 17px;
+    }
+    .about-facts dl > div {
+        grid-template-columns: 1fr;
+        gap: 2px;
+    }
+}

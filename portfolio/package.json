@@ -1,0 +1,27 @@
+{
+  "name": "portfolio",
+  "version": "1.0.0",
+  "description": "Web application that uses Kotlin Multiplatform Library",
+  "type": "module",
+  "scripts": {
+    "build": "tsc && vite build",
+    "start": "vite"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.1.0",
+    "@fontsource-variable/jetbrains-mono": "^5.1.0",
+    "@fontsource-variable/space-grotesk": "^5.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "portfolioContent": "0.0.1",
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/three": "^0.170.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "typescript": "^5.0.2",
+    "vite": "^7.1.6"
+  }
+}
