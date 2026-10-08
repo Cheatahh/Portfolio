@@ -10,9 +10,9 @@ import {Close, Menu, Rocket} from './Icons.tsx';
 const SECTIONS = [
     {id: 'about', label: 'About'},
     {id: 'experience', label: 'Experience'},
+    {id: 'skills', label: 'Skills'},
     {id: 'research', label: 'Research'},
     {id: 'projects', label: 'Projects'},
-    {id: 'skills', label: 'Skills'},
     {id: 'contact', label: 'Contact'},
 ] as const;
 

@@ -13,7 +13,7 @@ export function Research() {
     return (
         <section id="research" className="section">
             <div className="container">
-                <SectionHead number="03" name="Research"
+                <SectionHead number="05" name="Research"
                              title={<>Compiling lexers <span className="gradient-text">ahead of time</span></>}
                              lead={thesis.degree}/>
                 <div className="research card reveal">

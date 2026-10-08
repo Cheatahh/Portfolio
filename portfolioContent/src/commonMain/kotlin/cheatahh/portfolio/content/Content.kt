@@ -197,10 +197,10 @@ private val PORTFOLIO = Portfolio(
     skills = arrayOf(
         SkillGroup("Languages", arrayOf("Kotlin", "Java", "C#", "C++", "C", "JavaScript", "TypeScript", "Python", "SQL", "Lua", "HTML", "CSS")),
         SkillGroup("Platforms & Frameworks", arrayOf("Android", "OutSystems", "React", ".NET", "Cordova", "Compose", "Ktor")),
-        SkillGroup("Compilers & JVM", arrayOf("FSM", "ANTLR4", "JFlex", "ASM", "JMH benchmarking")),
+        SkillGroup("Compilers & JVM", arrayOf("ASM", "FSM", "ANTLR4", "JFlex", "JMH benchmarking")),
         SkillGroup("AI & Data", arrayOf("SQL performance tuning", "llama.cpp", "LLM tool integration", "RDF / RDFS knowledge graphs")),
         SkillGroup("Graphics", arrayOf("OpenGL", "GLSL shaders")),
-        SkillGroup("Security & Quality", arrayOf("FIDO2", "Authentication", "Cybersecurity", "Polarion ALM", "GxP validation", "Fuzz testing", "Property-based testing")),
+        SkillGroup("Security & Quality", arrayOf("Authentication", "FIDO2", "Cybersecurity", "Polarion ALM", "GxP validation", "Fuzz testing", "Property-based testing")),
         SkillGroup("Professional", arrayOf("IT lead", "Tech lead", "Requirements engineering", "Stakeholder management")),
     ),
     education = arrayOf(

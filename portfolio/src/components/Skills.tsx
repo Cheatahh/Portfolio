@@ -4,13 +4,21 @@ import {data} from '../data.ts';
 import {delay} from '../utils.ts';
 import {SectionHead} from './SectionHead.tsx';
 
-const STRONGEST = new Set(['Kotlin', 'Android', 'OutSystems', 'SQL performance tuning', 'Tech lead', 'Authentication']);
+const STRONGEST = new Set([
+    'Kotlin', 'C++',
+    'Android', 'OutSystems',
+    'ASM',
+    'SQL performance tuning',
+    'OpenGL',
+    'Authentication', 'Cybersecurity',
+    'IT lead', 'Tech lead'
+]);
 
 export function Skills() {
     return (
         <section id="skills" className="section">
             <div className="container">
-                <SectionHead number="05" name="Skills"
+                <SectionHead number="03" name="Skills"
                              title={<>The <span className="gradient-text">toolbox</span></>}
                              lead="Kotlin is home base. Over the years I've also picked up native mobile, low-code, compilers, AI, graphics and security."/>
                 <div className="skills-grid">

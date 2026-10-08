@@ -8,7 +8,7 @@ export function Education() {
     return (
         <section id="education" className="section section-tight">
             <div className="container">
-                <SectionHead number="06" name="Education"
+                <SectionHead number="04" name="Education"
                              title={<>Learning <span className="gradient-text">while shipping</span></>}/>
                 <div className="edu-grid">
                     {data.education.map((edu, i) => (

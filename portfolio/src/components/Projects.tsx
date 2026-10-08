@@ -45,7 +45,7 @@ export function Projects() {
     return (
         <section id="projects" className="section">
             <div className="container">
-                <SectionHead number="04" name="Projects"
+                <SectionHead number="06" name="Projects"
                              title={<>Things I've <span className="gradient-text">built</span></>}
                              lead="Some of it at work, some of it at home, usually because I wanted something that didn't exist yet or I'm really bored."/>
                 <article className="project-featured card reveal">

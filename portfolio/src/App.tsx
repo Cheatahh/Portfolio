@@ -29,10 +29,10 @@ export function App() {
                 <Hero/>
                 <About/>
                 <Experience/>
-                <Research/>
-                <Projects/>
                 <Skills/>
                 <Education/>
+                <Research/>
+                <Projects/>
                 <Contact/>
             </main>
             <Footer/>
